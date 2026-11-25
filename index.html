@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taj Bakery • Surjani Town, Karachi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Syne, Space Mono, Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        softwhite: '#E8E9DF',
+                        surface: '#F4F5EE',
+                        sage: {
+                            DEFAULT: '#A9BB87',
+                            light: '#C5D2AC',
+                            dark: '#8CA167'
+                        },
+                        olive: {
+                            DEFAULT: '#2E3D28',
+                            hover: '#222E1D',
+                            muted: '#485941',
+                            darkest: '#1C2718'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Syne"', 'sans-serif'],
+                        mono: ['"Space Mono"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #E8E9DF;
+            color: #2E3D28;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .font-editorial {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+        .font-display {
+            font-family: 'Syne', sans-serif;
+        }
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E8E9DF;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #A9BB87;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2E3D28;
+        }
+        .glass-nav {
+            backdrop-filter: blur(16px);
+            background-color: rgba(46, 61, 40, 0.94);
+        }
+        .carousel-hero-slide {
+            transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .carousel-hero-slide.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+            pointer-events: auto;
+        }
+        .carousel-hero-slide.inactive {
+            opacity: 0;
+            transform: scale(1.05);
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-sage selection:text-olive">
+
+    <!-- TOP MINIMAL EDITORIAL NAV BAR (MATCHING FERMENT STYLE) -->
+    <header class="sticky top-0 z-40 glass-nav border-b border-softwhite/15 text-softwhite transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-2 group">
+                <span class="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-softwhite group-hover:text-sage transition">TAJ BAKERY®</span>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-xs font-mono tracking-widest text-softwhite/80 uppercase">
+                <a href="#menu-section" onclick="filterCategory('cakes')" class="hover:text-sage transition">OUR CAKES</a>
+                <a href="#menu-section" onclick="filterCategory('all')" class="hover:text-sage transition">OUR MENU</a>
+                <button onclick="openCustomCakeModal()" class="hover:text-sage transition uppercase">CUSTOM STUDIO</button>
+                <a href="#visit-section" class="hover:text-sage transition">FIND US</a>
+            </nav>
+
+            <!-- Action Controls -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleCartDrawer(true)" class="border border-softwhite/30 hover:border-sage bg-olive-darkest/60 text-softwhite px-4 py-2 rounded-lg font-mono text-xs tracking-wider transition flex items-center gap-2 group">
+                    <span>BAG</span>
+                    <span class="text-softwhite/40">•</span>
+                    <span id="cart-count" class="text-sage font-bold group-hover:text-softwhite">0</span>
+                </button>
+
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-softwhite/10 text-softwhite hover:bg-softwhite/20" aria-label="Toggle Menu">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-olive border-b border-softwhite/15 px-6 py-5 space-y-3 font-mono text-xs uppercase tracking-wider text-softwhite">
+            <a href="#" onclick="toggleMobileMenu()" class="block font-bold text-sage">HOME</a>
+            <a href="#menu-section" onclick="filterCategory('cakes'); toggleMobileMenu();" class="block hover:text-sage">OUR CAKES</a>
+            <a href="#menu-section" onclick="filterCategory('all'); toggleMobileMenu();" class="block hover:text-sage">OUR MENU</a>
+            <button onclick="openCustomCakeModal(); toggleMobileMenu();" class="block text-left w-full hover:text-sage">CUSTOM STUDIO</button>
+            <a href="#visit-section" onclick="toggleMobileMenu()" class="block hover:text-sage">FIND US (SURJANI TOWN)</a>
+        </div>
+    </header>
+
+    <!-- FULL-BLEED IMMERSIVE EMBOSSED CAKE HERO SECTION (MATCHING REFERENCE IMAGE) -->
+    <section class="relative min-h-[85vh] sm:min-h-[90vh] bg-olive text-softwhite overflow-hidden flex flex-col justify-between border-b border-sage/30">
+        
+        <!-- FULL-BLEED CAROUSEL BACKGROUND IMAGES -->
+        <div id="hero-carousel" 
+             onmouseenter="pauseCarousel()" 
+             onmouseleave="resumeCarousel()"
+             class="absolute inset-0 w-full h-full">
+            
+            <div id="carousel-slides" class="relative w-full h-full">
+                
+                <!-- Slide 1: Embossed Olive Botanical Sculptural Cake Visual (Inspired by Reference) -->
+                <div class="carousel-hero-slide active absolute inset-0 w-full h-full" data-index="0">
+                    <img src="https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=1600&q=90" 
+                         onerror="this.src='https://placehold.co/1600x1000/2E3D28/E8E9DF?text=Embossed+Botanical+Sculptural+Cake'"
+                         alt="Sculptural Botanical Embossed Cake" 
+                         class="w-full h-full object-cover object-right sm:object-center brightness-75 contrast-110">
+                    <!-- Vignette and Gradient Overlay for Embossed Canvas Depth -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-olive via-olive/85 to-transparent sm:to-olive/40"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-olive via-transparent to-olive/60"></div>
+                </div>
+
+                <!-- Slide 2: User's Chocolate Drip Cake (images (2).jfif) -->
+                <div class="carousel-hero-slide inactive absolute inset-0 w-full h-full" data-index="1">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1600&q=90" 
+                         onerror="this.src='https://placehold.co/1600x1000/2E3D28/E8E9DF?text=Signature+Chocolate+Drip+Cake'"
+                         alt="Signature Chocolate Drip Cake" 
+                         class="w-full h-full object-cover object-right sm:object-center brightness-75">
+                    <div class="absolute inset-0 bg-gradient-to-r from-olive via-olive/85 to-transparent sm:to-olive/40"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-olive via-transparent to-olive/60"></div>
+                </div>
+
+                <!-- Slide 3: Artisanal Truffle Cake (ChatGPT_Image_Jul_9_2026_03_37_24_PM.webp) -->
+                <div class="carousel-hero-slide inactive absolute inset-0 w-full h-full" data-index="2">
+                    <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=1600&q=90" 
+                         onerror="this.src='https://placehold.co/1600x1000/2E3D28/E8E9DF?text=Gold-Leaf+Chocolate+Ganache'"
+                         alt="Gold-Leaf Chocolate Ganache Cake" 
+                         class="w-full h-full object-cover object-right sm:object-center brightness-75">
+                    <div class="absolute inset-0 bg-gradient-to-r from-olive via-olive/85 to-transparent sm:to-olive/40"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-olive via-transparent to-olive/60"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- HERO CONTENT OVERLAY -->
+        <div class="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-8 pt-8 sm:pt-12 flex-1 flex flex-col justify-between">
+            
+            <!-- Top Metadata Bar -->
+            <div class="flex items-center justify-between font-mono text-[11px] sm:text-xs text-softwhite/70 tracking-widest uppercase border-b border-softwhite/10 pb-4">
+                <div>SURJANI TOWN BAKERY / EST. 1998</div>
+                <div class="hidden sm:block">FRESH BATCH DAILY • 07:00 AM</div>
+            </div>
+
+            <!-- Main Embossed Stacked Display Typography & Copy -->
+            <div class="my-auto py-10 sm:py-16 max-w-3xl space-y-6">
+                
+                <div class="space-y-0 tracking-tight leading-[0.88] select-none">
+                    <h1 class="font-display font-extrabold text-[58px] sm:text-[96px] lg:text-[124px] text-softwhite uppercase block drop-shadow-md">
+                        CAKES
+                    </h1>
+                    <h1 class="font-display font-extrabold text-[58px] sm:text-[96px] lg:text-[124px] text-sage uppercase block -mt-2 sm:-mt-5 drop-shadow-md">
+                        ALIVE.
+                    </h1>
+                </div>
+
+                <p class="font-mono text-xs sm:text-sm text-softwhite/85 max-w-md leading-relaxed tracking-wide pt-2">
+                    A Surjani Town bakery making big-flavor cakes. Rich ganache. Fresh cream. Ridiculously good celebrations.
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center gap-5 pt-4">
+                    <a href="#menu-section" onclick="filterCategory('cakes')" class="bg-sage hover:bg-sage-light text-olive px-7 py-4 rounded-md font-mono text-xs uppercase font-bold tracking-widest transition flex items-center gap-2 shadow-lg">
+                        <span>EXPLORE DAILY CAKES</span>
+                        <span class="text-sm">↗</span>
+                    </a>
+                    <button onclick="openCustomCakeModal()" class="font-mono text-xs uppercase font-bold tracking-widest text-softwhite hover:text-sage transition border-b border-softwhite/60 hover:border-sage pb-1">
+                        HOW WE BAKE IT
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Hero Controls & Sub-bar -->
+            <div class="flex items-center justify-between pb-8 pt-4 border-t border-softwhite/10 font-mono text-xs text-softwhite/70">
+                <div class="flex items-center gap-3">
+                    <span class="text-sage font-bold">01</span>
+                    <span class="text-softwhite/30">/</span>
+                    <span>SURJANI TOWN • KARACHI</span>
+                </div>
+
+                <!-- Minimalist Carousel Controls -->
+                <div class="flex items-center gap-4">
+                    <button onclick="prevSlide()" aria-label="Previous Slide" class="w-9 h-9 rounded-md border border-softwhite/20 hover:border-sage bg-olive/60 text-softwhite hover:text-sage flex items-center justify-center transition">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <div id="carousel-dots" class="flex items-center gap-2">
+                        <button onclick="goToSlide(0)" aria-label="Slide 1" class="carousel-dot w-6 h-1.5 rounded-full bg-sage transition-all"></button>
+                        <button onclick="goToSlide(1)" aria-label="Slide 2" class="carousel-dot w-2 h-1.5 rounded-full bg-softwhite/40 hover:bg-softwhite transition-all"></button>
+                        <button onclick="goToSlide(2)" aria-label="Slide 3" class="carousel-dot w-2 h-1.5 rounded-full bg-softwhite/40 hover:bg-softwhite transition-all"></button>
+                    </div>
+
+                    <button onclick="nextSlide()" aria-label="Next Slide" class="w-9 h-9 rounded-md border border-softwhite/20 hover:border-sage bg-olive/60 text-softwhite hover:text-sage flex items-center justify-center transition">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- THREE-CARD EDITORIAL HIGHLIGHTS ROW -->
+    <section class="py-12 px-4 sm:px-8 max-w-7xl mx-auto">
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-olive/85 via-olive/20 to-transparent"></div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-sage text-olive text-[11px] font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                                    Chef's Artisanal Collection
+                                </span>
+                            </div>
+                            <div class="absolute bottom-14 left-4 right-4 sm:left-6 sm:right-6 bg-softwhite/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-sage/70 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-olive-muted block">Belgian Truffle & Gold Accent</span>
+                                    <h3 class="font-editorial text-xl sm:text-2xl font-bold text-olive leading-tight">Gold-Leaf Chocolate Ganache Cake</h3>
+                                    <span class="font-serif font-bold text-base text-olive">Rs. 2,200 <span class="text-xs font-sans font-normal text-olive-muted">/ 2 Lbs</span></span>
+                                </div>
+                                <button onclick="addToCart(2)" class="bg-olive hover:bg-olive-hover text-softwhite px-5 py-2.5 rounded-full text-xs font-semibold transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Order This
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3 -->
+                        <div class="carousel-slide inactive absolute inset-0 w-full h-full" data-index="2">
+                            <img src="https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=1100&q=85" 
+                                 onerror="this.src='https://placehold.co/900x700/2E3D28/E8E9DF?text=Custom+Celebration+Tier+Cake'"
+                                 alt="Custom Celebration & Wedding Floral Tier Cake" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-olive/85 via-olive/20 to-transparent"></div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-sage text-olive text-[11px] font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                                    Weddings & Engagements
+                                </span>
+                            </div>
+                            <div class="absolute bottom-14 left-4 right-4 sm:left-6 sm:right-6 bg-softwhite/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-sage/70 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-olive-muted block">Bespoke Event Centerpiece</span>
+                                    <h3 class="font-editorial text-xl sm:text-2xl font-bold text-olive leading-tight">Celebration Floral Tier Cake</h3>
+                                    <span class="font-serif font-bold text-base text-olive">Rs. 3,400 <span class="text-xs font-sans font-normal text-olive-muted">/ 3 Lbs</span></span>
+                                </div>
+                                <button onclick="openCustomCakeModal()" class="bg-olive hover:bg-olive-hover text-softwhite px-5 py-2.5 rounded-full text-xs font-semibold transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm">
+                                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Customize
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4 -->
+                        <div class="carousel-slide inactive absolute inset-0 w-full h-full" data-index="3">
+                            <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=1100&q=85" 
+                                 onerror="this.src='https://placehold.co/900x700/2E3D28/E8E9DF?text=Surjani+Morning+Bakery+Platter'"
+                                 alt="Fresh Surjani Town Morning Bakery Platter" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-olive/85 via-olive/20 to-transparent"></div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-sage text-olive text-[11px] font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                                    Baked Fresh 7:00 AM Daily
+                                </span>
+                            </div>
+                            <div class="absolute bottom-14 left-4 right-4 sm:left-6 sm:right-6 bg-softwhite/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-sage/70 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-olive-muted block">Zeera Biscuits, Puffs & Mithai</span>
+                                    <h3 class="font-editorial text-xl sm:text-2xl font-bold text-olive leading-tight">Surjani Morning Bakery Platter</h3>
+                                    <span class="font-serif font-bold text-base text-olive">Rs. 950 <span class="text-xs font-sans font-normal text-olive-muted">/ Assorted Box</span></span>
+                                </div>
+                                <button onclick="addToCart(6)" class="bg-olive hover:bg-olive-hover text-softwhite px-5 py-2.5 rounded-full text-xs font-semibold transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Order This
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Left / Right Chevron Navigation Buttons -->
+                    <button onclick="prevSlide()" aria-label="Previous Slide" class="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-softwhite/90 hover:bg-softwhite text-olive border border-sage/70 shadow-md flex items-center justify-center transition transform hover:scale-105">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="nextSlide()" aria-label="Next Slide" class="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-softwhite/90 hover:bg-softwhite text-olive border border-sage/70 shadow-md flex items-center justify-center transition transform hover:scale-105">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Pagination Dots / Pills -->
+                    <div id="carousel-dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-olive/75 backdrop-blur-sm px-3.5 py-2 rounded-full">
+                        <button onclick="goToSlide(0)" aria-label="Slide 1" class="carousel-dot w-7 h-2 rounded-full bg-sage transition-all"></button>
+                        <button onclick="goToSlide(1)" aria-label="Slide 2" class="carousel-dot w-2 h-2 rounded-full bg-softwhite/50 hover:bg-softwhite transition-all"></button>
+                        <button onclick="goToSlide(2)" aria-label="Slide 3" class="carousel-dot w-2 h-2 rounded-full bg-softwhite/50 hover:bg-softwhite transition-all"></button>
+                        <button onclick="goToSlide(3)" aria-label="Slide 4" class="carousel-dot w-2 h-2 rounded-full bg-softwhite/50 hover:bg-softwhite transition-all"></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- THREE-CARD EDITORIAL FEATURED HIGHLIGHTS ROW -->
+    <section class="py-6 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- Card 1: Gold-Leaf Chocolate Ganache Cake -->
+            <div class="md:col-span-4 bg-surface rounded-2xl overflow-hidden border border-sage/45 shadow-sm flex flex-col justify-between group hover:shadow-md transition">
+                <div class="relative h-60 overflow-hidden bg-softwhite">
+                    <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80" 
+                         onerror="this.src='https://placehold.co/600x450/2E3D28/E8E9DF?text=Gold-Leaf+Chocolate+Ganache'"
+                         alt="Gold-Leaf Chocolate Ganache Cake" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <span class="absolute top-3.5 left-3.5 bg-sage text-olive text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm font-mono">Signature</span>
+                </div>
+                <div class="p-6 flex flex-col justify-between flex-1">
+                    <div>
+                        <h3 class="font-editorial text-2xl font-bold text-olive mb-1.5">Gold-Leaf Chocolate Ganache Cake</h3>
+                        <p class="text-xs text-olive-muted leading-relaxed">Velvety Belgian dark chocolate sponge finished with silky ganache drips, cocoa swirls, and edible gold accents.</p>
+                    </div>
+                    <div class="mt-5 pt-4 border-t border-sage/30 flex items-center justify-between">
+                        <span class="font-serif font-bold text-xl text-olive">Rs. 2,200</span>
+                        <button onclick="addToCart(2)" class="bg-olive hover:bg-olive-hover text-softwhite px-4 py-2 rounded-full text-xs font-semibold transition">
+                            + Add to Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Signature Chocolate Drip Cake -->
+            <div class="md:col-span-4 bg-surface rounded-2xl border border-sage/45 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80" 
+                         onerror="this.src='https://placehold.co/300x300/2E3D28/E8E9DF?text=Chocolate+Drip'"
+                         alt="Signature Chocolate Drip Cake" 
+                         class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover border border-sage/50 shrink-0">
+                    <div>
+                        <span class="inline-block bg-sage/40 text-olive text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full mb-1.5 font-mono">House Favorite</span>
+                        <h3 class="font-editorial text-xl sm:text-2xl font-bold text-olive leading-tight">Signature Chocolate Drip Cake</h3>
+                        <p class="text-xs text-olive-muted mt-1.5 leading-relaxed">Delight in our rich, custom-made cakes and traditional baked goods, lovingly prepared daily.</p>
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-sage/30 flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] uppercase tracking-wider text-olive-muted block font-mono">Starting at</span>
+                        <span class="font-serif font-bold text-2xl text-olive">Rs. 1,800</span>
+                    </div>
+                    <button onclick="addToCart(1)" class="bg-olive hover:bg-olive-hover text-softwhite px-5 py-2.5 rounded-full text-xs font-semibold transition shadow-sm">
+                        + Quick Add
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: Local Favorites -->
+            <div class="md:col-span-4 bg-surface rounded-2xl border border-sage/45 shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=500&q=80" 
+                         onerror="this.src='https://placehold.co/300x300/2E3D28/E8E9DF?text=Local+Favorites'"
+                         alt="Local Favorites Biscuits & Puff Pastries" 
+                         class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover border border-sage/50 shrink-0">
+                    <div>
+                        <span class="inline-block bg-sage/40 text-olive text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full mb-1.5 font-mono">Surjani Daily</span>
+                        <h3 class="font-editorial text-xl sm:text-2xl font-bold text-olive leading-tight">Local Favorites</h3>
+                        <p class="text-xs text-olive-muted mt-1.5 leading-relaxed">Browse local bakery fresh Biscuits, Puff Pastries, and Patties baked hot out of our ovens every morning.</p>
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-sage/30 flex items-center justify-between">
+                    <a href="#menu-section" onclick="filterCategory('savories')" class="text-xs font-bold text-olive hover:text-olive-muted transition flex items-center gap-1.5 font-mono">
+                        <span>BROWSE MENU</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                    <button onclick="filterCategory('biscuits')" class="border border-olive text-olive hover:bg-sage/40 px-4 py-2 rounded-full text-xs font-semibold transition">
+                        Explore Bakery
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- INTERACTIVE BAKERY MENU SECTION -->
+    <section id="menu-section" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto border-t border-sage/40 mt-6">
+        
+        <div class="text-center max-w-2xl mx-auto space-y-2.5 mb-10">
+            <span class="text-xs uppercase tracking-[0.2em] text-olive-muted font-bold">FRESHLY PREPARED DAILY IN SURJANI TOWN</span>
+            <h2 class="font-editorial text-3xl sm:text-5xl font-bold text-olive">Explore Our Bakery Menu</h2>
+            <p class="text-xs sm:text-sm text-olive-muted">Handcrafted chocolate drip cakes, crispy tea biscuits, hot chicken puff patties, and pure desi ghee mithai.</p>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 mb-10">
+            <button onclick="filterCategory('all')" id="tab-all" class="category-tab active bg-olive text-softwhite px-5 py-2.5 rounded-full text-xs font-semibold transition shadow-sm">All Items</button>
+            <button onclick="filterCategory('cakes')" id="tab-cakes" class="category-tab bg-surface border border-sage/50 text-olive hover:bg-sage/35 px-5 py-2.5 rounded-full text-xs font-semibold transition">Signature Cakes</button>
+            <button onclick="filterCategory('biscuits')" id="tab-biscuits" class="category-tab bg-surface border border-sage/50 text-olive hover:bg-sage/35 px-5 py-2.5 rounded-full text-xs font-semibold transition">Biscuits & Rusk</button>
+            <button onclick="filterCategory('savories')" id="tab-savories" class="category-tab bg-surface border border-sage/50 text-olive hover:bg-sage/35 px-5 py-2.5 rounded-full text-xs font-semibold transition">Savory Patties</button>
+            <button onclick="filterCategory('mithai')" id="tab-mithai" class="category-tab bg-surface border border-sage/50 text-olive hover:bg-sage/35 px-5 py-2.5 rounded-full text-xs font-semibold transition">Mithai & Desserts</button>
+        </div>
+
+        <!-- Product Cards Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Rendered dynamically via JS -->
+        </div>
+    </section>
+
+    <!-- CUSTOM CAKE STUDIO PROMO BANNER -->
+    <section class="py-10 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="bg-olive text-softwhite rounded-3xl p-8 sm:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl border border-sage/30">
+            <div class="space-y-4 max-w-xl z-10">
+                <span class="inline-block bg-sage text-olive text-[10px] uppercase tracking-[0.2em] font-bold px-3 py-1 rounded-full">TAJ BAKERY CUSTOM STUDIO</span>
+                <h2 class="font-editorial text-3xl sm:text-5xl font-bold text-softwhite leading-tight">Design Your Dream Celebration Cake</h2>
+                <p class="text-softwhite/85 text-xs sm:text-sm leading-relaxed">
+                    Choose your flavor, weight, and personalized message. Handcrafted fresh to order and delivered across Surjani Town & North Karachi.
+                </p>
+                <div class="pt-2 flex flex-wrap gap-4 text-xs text-sage font-medium">
+                    <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Belgian Chocolate & Cream</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Custom Message Piping</span>
+                    <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Same-Day Surjani Delivery</span>
+                </div>
+            </div>
+
+            <div class="z-10 flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto">
+                <button onclick="openCustomCakeModal()" class="bg-sage hover:bg-sage-light text-olive px-7 py-4 rounded-full font-bold text-xs sm:text-sm transition text-center shadow-lg">
+                    Open Cake Customizer
+                </button>
+                <a href="https://wa.me/923001234567?text=Assalam-o-Alaikum%20Taj%20Bakery,%20I%20would%20like%20to%20order%20a%20custom%20cake." target="_blank" rel="noopener noreferrer" class="bg-softwhite/10 hover:bg-softwhite/20 border border-sage/60 text-softwhite px-7 py-4 rounded-full font-semibold text-xs sm:text-sm transition text-center flex items-center justify-center gap-2">
+                    <i data-lucide="message-circle" class="w-4 h-4 text-sage"></i>
+                    <span>Order on WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SURJANI TOWN HERITAGE & VISIT US SECTION -->
+    <section id="visit-section" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto border-t border-sage/40">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            <!-- Store Details Card -->
+            <div class="lg:col-span-5 bg-surface p-8 rounded-3xl border border-sage/50 shadow-sm flex flex-col justify-between space-y-6">
+                <div>
+                    <span class="text-xs uppercase tracking-[0.18em] text-olive-muted font-bold block mb-2">HERITAGE SINCE 1998</span>
+                    <h3 class="font-editorial text-3xl sm:text-4xl font-bold text-olive mb-3">Visit Taj Bakery Surjani Town</h3>
+                    <p class="text-olive-muted text-xs sm:text-sm leading-relaxed mb-6">
+                        For over two decades, Taj Bakery has been the heart of celebrations in Surjani Town—serving families across Sector 4, 5, 7, 10, 11, and North Karachi with warm hospitality and honest ingredients.
+                    </p>
+
+                    <div class="space-y-4 text-xs sm:text-sm text-olive">
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-full bg-sage/45 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-olive"></i>
+                            </div>
+                            <div>
+                                <strong class="font-bold">Flagship Address:</strong><br>
+                                <span class="text-olive-muted">Main Commercial Road, Sector 7-A, Surjani Town, Karachi.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-full bg-sage/45 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="clock" class="w-4 h-4 text-olive"></i>
+                            </div>
+                            <div>
+                                <strong class="font-bold">Opening Hours:</strong><br>
+                                <span class="text-olive-muted">Monday – Sunday: 7:00 AM – 11:30 PM</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3.5">
+                            <div class="w-8 h-8 rounded-full bg-sage/45 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="phone-call" class="w-4 h-4 text-olive"></i>
+                            </div>
+                            <div>
+                                <strong class="font-bold">Direct Order Line & WhatsApp:</strong><br>
+                                <span class="text-olive-muted">0300-1234567</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-sage/30 flex flex-col sm:flex-row gap-3">
+                    <a href="https://wa.me/923001234567?text=Assalam-o-Alaikum%20Taj%20Bakery%20Surjani%20Town!" target="_blank" rel="noopener noreferrer" class="flex-1 bg-olive hover:bg-olive-hover text-softwhite text-center py-3 px-4 rounded-full text-xs font-semibold transition flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle" class="w-4 h-4 text-sage"></i> WhatsApp Order
+                    </a>
+                    <a href="https://maps.google.com/?q=Sector+7+Surjani+Town+Karachi" target="_blank" rel="noopener noreferrer" class="flex-1 border border-olive text-olive hover:bg-sage/40 text-center py-3 px-4 rounded-full text-xs font-semibold transition flex items-center justify-center gap-2">
+                        <i data-lucide="navigation" class="w-3.5 h-3.5"></i> Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- Editorial Bakery Showcase Banner -->
+            <div class="lg:col-span-7 bg-olive rounded-3xl overflow-hidden relative min-h-[340px] shadow-sm border border-sage/40">
+                <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=85" 
+                     onerror="this.src='https://placehold.co/1000x700/2E3D28/E8E9DF?text=Taj+Bakery+Surjani+Town+Counter'"
+                     alt="Taj Bakery Fresh Artisan Counter" 
+                     class="w-full h-full object-cover opacity-85">
+                <div class="absolute inset-0 bg-gradient-to-t from-olive via-olive/30 to-transparent"></div>
+                <div class="absolute bottom-6 left-6 right-6 bg-softwhite/95 backdrop-blur-md p-6 rounded-2xl max-w-lg shadow-lg border border-sage">
+                    <span class="text-[10px] uppercase font-bold text-olive-muted tracking-[0.2em] block mb-1">QUALITY GUARANTEED</span>
+                    <h4 class="font-editorial text-2xl font-bold text-olive mb-1.5">Surjani Town's Beloved Bakery Since 1998</h4>
+                    <p class="text-xs text-olive-muted leading-relaxed">From late-night birthday drip cakes to morning chai biscuits and piping hot chicken patties, every batch is crafted with pride.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-olive text-softwhite py-14 px-4 sm:px-8 border-t border-sage/20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+            <div class="space-y-3.5">
+                <span class="font-editorial text-3xl font-bold text-softwhite tracking-tight block">Taj Bakery</span>
+                <p class="text-xs text-softwhite/75 leading-relaxed">
+                    Crafting artisanal chocolate drip cakes, traditional Pakistani mithai, and fresh daily savories in Surjani Town, Karachi since 1998.
+                </p>
+                <div class="flex items-center gap-3 pt-1">
+                    <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-softwhite/10 hover:bg-sage hover:text-olive flex items-center justify-center transition" aria-label="WhatsApp">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    </a>
+                    <a href="tel:+923001234567" class="w-9 h-9 rounded-full bg-softwhite/10 hover:bg-sage hover:text-olive flex items-center justify-center transition" aria-label="Call">
+                        <i data-lucide="phone" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#visit-section" class="w-9 h-9 rounded-full bg-softwhite/10 hover:bg-sage hover:text-olive flex items-center justify-center transition" aria-label="Location">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-[0.18em] text-sage mb-4">Quick Links</h4>
+                <ul class="space-y-2.5 text-xs text-softwhite/80">
+                    <li><a href="#" class="hover:text-sage transition">Home</a></li>
+                    <li><a href="#menu-section" class="hover:text-sage transition">Our Bakery Menu</a></li>
+                    <li><button onclick="openCustomCakeModal()" class="hover:text-sage transition">Custom Cake Studio</button></li>
+                    <li><a href="#visit-section" class="hover:text-sage transition">Surjani Town Location</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-[0.18em] text-sage mb-4">Specialties</h4>
+                <ul class="space-y-2.5 text-xs text-softwhite/80">
+                    <li><a href="#menu-section" onclick="filterCategory('cakes')" class="hover:text-sage transition">Chocolate Drip Cakes</a></li>
+                    <li><a href="#menu-section" onclick="filterCategory('biscuits')" class="hover:text-sage transition">Zeera & Khatai Biscuits</a></li>
+                    <li><a href="#menu-section" onclick="filterCategory('savories')" class="hover:text-sage transition">Hot Chicken Puff Patties</a></li>
+                    <li><a href="#menu-section" onclick="filterCategory('mithai')" class="hover:text-sage transition">Desi Ghee Gulab Jamun</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-[0.18em] text-sage mb-4">Surjani Delivery</h4>
+                <p class="text-xs text-softwhite/80 mb-3 leading-relaxed">
+                    Fast doorstep delivery across Sector 4, 5, 7-A, 10, 11 & North Karachi.
+                </p>
+                <div class="bg-softwhite/10 p-3.5 rounded-2xl border border-sage/30 text-xs text-sage font-semibold flex items-center gap-2">
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                    <span>Hotline: 0300-1234567</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-6 border-t border-softwhite/15 text-center text-[11px] text-softwhite/60 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div>© 2026 Taj Bakery • Main Commercial Road, Sector 7-A, Surjani Town, Karachi.</div>
+            <div>Freshly Baked Daily Since 1998</div>
+        </div>
+    </footer>
+
+    <!-- SLIDE-OVER SHOPPING BAG DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 bg-olive/60 backdrop-blur-xs z-50 hidden transition-opacity">
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-softwhite shadow-2xl flex flex-col justify-between p-6 overflow-y-auto border-l border-sage">
+            <div>
+                <div class="flex items-center justify-between pb-4 border-b border-sage/50">
+                    <div>
+                        <span class="text-[10px] uppercase tracking-widest text-olive-muted font-bold block">TAJ BAKERY SURJANI</span>
+                        <h3 class="font-editorial text-2xl font-bold text-olive">Your Order Bag</h3>
+                    </div>
+                    <button onclick="toggleCartDrawer(false)" class="w-9 h-9 rounded-full bg-surface hover:bg-sage/40 text-olive flex items-center justify-center transition" aria-label="Close Cart">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <div id="cart-items-container" class="py-4 space-y-3 divide-y divide-sage/30">
+                    <div class="text-center py-12 text-olive-muted text-xs">Your order bag is currently empty.</div>
+                </div>
+            </div>
+
+            <div class="border-t border-sage/50 pt-4 space-y-4">
+                <div class="flex justify-between items-center font-bold text-olive text-sm">
+                    <span>Subtotal (PKR):</span>
+                    <span id="cart-total" class="text-olive font-serif text-2xl">Rs. 0</span>
+                </div>
+                <div class="grid grid-cols-1 gap-2.5">
+                    <button onclick="openCheckoutModal()" class="w-full bg-olive hover:bg-olive-hover text-softwhite py-3.5 rounded-full font-semibold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-sage"></i>
+                        <span>Confirm Order Summary</span>
+                    </button>
+                    <button onclick="sendWhatsAppOrder()" class="w-full bg-sage hover:bg-sage-dark text-olive py-3 rounded-full font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>Order Directly via WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CAKE BUILDER MODAL -->
+    <div id="custom-cake-modal" class="fixed inset-0 bg-olive/65 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-softwhite rounded-3xl max-w-lg w-full p-6 sm:p-8 border-2 border-sage shadow-2xl relative max-h-[92vh] overflow-y-auto">
+            <button onclick="closeCustomCakeModal()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-surface hover:bg-sage/40 text-olive flex items-center justify-center transition" aria-label="Close Modal">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="mb-5">
+                <span class="inline-block bg-sage/50 text-olive text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full mb-1.5">CUSTOM CAKE STUDIO</span>
+                <h3 class="font-editorial text-3xl font-bold text-olive">Build Your Custom Cake</h3>
+                <p class="text-xs text-olive-muted mt-1">Configure your flavor, size, message, and Surjani Town delivery sector.</p>
+            </div>
+
+            <form onsubmit="handleCustomCakeSubmit(event)" class="space-y-4 text-xs font-medium">
+                <div>
+                    <label class="block text-olive font-bold mb-1.5">1. Select Cake Flavor</label>
+                    <select id="cake-flavor" class="w-full bg-surface border border-sage text-olive rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-olive font-medium">
+                        <option value="Belgian Chocolate Drip Cake">Belgian Chocolate Drip (Rosettes & Choco Chips)</option>
+                        <option value="Dutch Truffle Gold-Leaf Cake">Dutch Truffle Ganache (Gold-Leaf Finish)</option>
+                        <option value="Red Velvet Cream Cheese Cake">Red Velvet Cream Cheese</option>
+                        <option value="Pineapple Fresh Cream Cake">Pineapple Fresh Cream</option>
+                        <option value="Lotus Biscoff Caramel Drip">Lotus Biscoff Caramel Drip</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-olive font-bold mb-1.5">2. Choose Cake Weight</label>
+                    <div class="grid grid-cols-4 gap-2" id="weight-selector-grid">
+                        <label class="weight-option border-2 border-olive bg-sage/30 rounded-xl p-2.5 text-center cursor-pointer transition">
+                            <input type="radio" name="cake-weight" value="1 lb" data-price="1000" checked onchange="updateCustomPrice()" class="hidden">
+                            <span class="block font-bold text-olive text-xs">1 lb</span>
+                            <span class="text-[10px] text-olive-muted font-semibold">Rs. 1,000</span>
+                        </label>
+                        <label class="weight-option border border-sage bg-surface rounded-xl p-2.5 text-center cursor-pointer transition">
+                            <input type="radio" name="cake-weight" value="2 lbs" data-price="1800" onchange="updateCustomPrice()" class="hidden">
+                            <span class="block font-bold text-olive text-xs">2 lbs</span>
+                            <span class="text-[10px] text-olive-muted font-semibold">Rs. 1,800</span>
+                        </label>
+                        <label class="weight-option border border-sage bg-surface rounded-xl p-2.5 text-center cursor-pointer transition">
+                            <input type="radio" name="cake-weight" value="3 lbs" data-price="2600" onchange="updateCustomPrice()" class="hidden">
+                            <span class="block font-bold text-olive text-xs">3 lbs</span>
+                            <span class="text-[10px] text-olive-muted font-semibold">Rs. 2,600</span>
+                        </label>
+                        <label class="weight-option border border-sage bg-surface rounded-xl p-2.5 text-center cursor-pointer transition">
+                            <input type="radio" name="cake-weight" value="5 lbs" data-price="4200" onchange="updateCustomPrice()" class="hidden">
+                            <span class="block font-bold text-olive text-xs">5 lbs</span>
+                            <span class="text-[10px] text-olive-muted font-semibold">Rs. 4,200</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-olive font-bold mb-1.5">3. Custom Cake Message</label>
+                    <input type="text" id="cake-message" placeholder="e.g. Happy Birthday Zoya!" class="w-full bg-surface border border-sage text-olive rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-olive">
+                </div>
+
+                <div>
+                    <label class="block text-olive font-bold mb-1.5">4. Delivery / Pickup in Surjani Town</label>
+                    <select id="delivery-sector" class="w-full bg-surface border border-sage text-olive rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-olive font-medium">
+                        <option value="Sector 4, Surjani Town">Sector 4, Surjani Town</option>
+                        <option value="Sector 5, Surjani Town">Sector 5, Surjani Town</option>
+                        <option value="Sector 7-A (Main Commercial Road)">Sector 7-A (Main Commercial Road)</option>
+                        <option value="Sector 10, Surjani Town">Sector 10, Surjani Town</option>
+                        <option value="North Karachi">North Karachi</option>
+                        <option value="Store Pickup (Sector 7-A Branch)">Store Pickup (Sector 7-A Branch)</option>
+                    </select>
+                </div>
+
+                <div class="bg-surface border border-sage/60 rounded-2xl p-3.5 flex items-center justify-between">
+                    <span class="text-olive-muted font-semibold">Estimated Total:</span>
+                    <span id="custom-cake-live-price" class="font-serif text-2xl font-bold text-olive">Rs. 1,000</span>
+                </div>
+
+                <div class="pt-1">
+                    <button type="submit" class="w-full bg-olive hover:bg-olive-hover text-softwhite py-3.5 rounded-full font-bold text-xs sm:text-sm transition shadow-md">
+                        Add Custom Cake to Bag
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ORDER CONFIRMATION / CHECKOUT SUMMARY MODAL -->
+    <div id="checkout-modal" class="fixed inset-0 bg-olive/65 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-softwhite rounded-3xl max-w-md w-full p-6 sm:p-8 border-2 border-sage shadow-2xl relative">
+            <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface text-olive flex items-center justify-center">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="text-center space-y-3 mb-5">
+                <div class="w-12 h-12 rounded-full bg-sage text-olive flex items-center justify-center mx-auto">
+                    <i data-lucide="check" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-editorial text-2xl sm:text-3xl font-bold text-olive">Order Ready for Taj Bakery</h3>
+                <p class="text-xs text-olive-muted">Review your items below and send directly to our Surjani Town counter via WhatsApp for instant confirmation.</p>
+            </div>
+            <div id="checkout-summary-box" class="bg-surface border border-sage/60 rounded-2xl p-4 text-xs text-olive space-y-2 mb-5 max-h-48 overflow-y-auto">
+                <!-- Populated dynamically -->
+            </div>
+            <div class="space-y-2.5">
+                <button onclick="sendWhatsAppOrder()" class="w-full bg-olive hover:bg-olive-hover text-softwhite py-3.5 rounded-full font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-md">
+                    <i data-lucide="message-circle" class="w-4 h-4 text-sage"></i>
+                    <span>Send Order to WhatsApp (0300-1234567)</span>
+                </button>
+                <button onclick="clearAndCloseOrder()" class="w-full border border-olive text-olive hover:bg-sage/35 py-2.5 rounded-full font-semibold text-xs transition">
+                    Done & Clear Bag
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 hidden bg-olive text-softwhite border border-sage px-4 py-3 rounded-2xl shadow-xl text-xs font-medium flex items-center gap-2.5">
+        <i data-lucide="check-circle" class="w-4 h-4 text-sage"></i>
+        <span id="toast-message">Item added to your order bag!</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC: CAROUSEL, MENU FILTER, CUSTOMIZER & CART -->
+    <script>
+        // Menu Products Data
+        const products = [
+            {
+                id: 1,
+                name: "Signature Chocolate Drip Cake",
+                category: "cakes",
+                portion: "2 Lbs • Serves 8-10",
+                price: 1800,
+                desc: "Moist dark cocoa sponge layered with silky fudge frosting, dark ganache drip, and chocolate chip rosettes.",
+                image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=700&q=80"
+            },
+            {
+                id: 2,
+                name: "Gold-Leaf Chocolate Ganache Cake",
+                category: "cakes",
+                portion: "2 Lbs • Serves 8-10",
+                price: 2200,
+                desc: "Artisanal Belgian dark truffle cake crowned with piped chocolate swirls and edible gold leaf accents.",
+                image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=700&q=80"
+            },
+            {
+                id: 3,
+                name: "Celebration Floral Tier Cake",
+                category: "cakes",
+                portion: "3 Lbs • Serves 14-16",
+                price: 3400,
+                desc: "Vanilla bean and fresh cream sponge finished with minimalist botanical styling for weddings & birthdays.",
+                image: "https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=700&q=80"
+            },
+            {
+                id: 4,
+                name: "Classic Black Forest Cake",
+                category: "cakes",
+                portion: "2 Lbs • Serves 8-10",
+                price: 1650,
+                desc: "Rich chocolate layers soaked in cherry syrup with fresh whipped cream and dark chocolate shavings.",
+                image: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=700&q=80"
+            },
+            {
+                id: 5,
+                name: "Hot Chicken Puff Patties (12 Pcs)",
+                category: "savories",
+                portion: "1 Dozen • Freshly Baked",
+                price: 680,
+                desc: "Flaky, golden multi-layered puff pastry filled with spiced shredded chicken—Surjani Town's favorite tea snack.",
+                image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=700&q=80"
+            },
+            {
+                id: 6,
+                name: "Surjani Morning Biscuits & Khatai Box",
+                category: "biscuits",
+                portion: "1 Kg • Assorted Tin",
+                price: 950,
+                desc: "Melt-in-your-mouth pure butter nan khatai, roasted zeera biscuits, and almond shortbread.",
+                image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=700&q=80"
+            },
+            {
+                id: 7,
+                name: "Crispy Milky Cake Rusk (Twin Pack)",
+                category: "biscuits",
+                portion: "800g • Double Baked",
+                price: 560,
+                desc: "Golden, crunchy cardamom-kissed cake rusk baked with fresh milk and butter for morning chai.",
+                image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=700&q=80"
+            },
+            {
+                id: 8,
+                name: "Desi Ghee Gulab Jamun & Mithai",
+                category: "mithai",
+                portion: "1 Kg • Gift Box",
+                price: 1250,
+                desc: "Warm, soft khoya gulab jamun infused with green cardamom and rosewater syrup.",
+                image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=700&q=80"
+            }
+        ];
+
+        let cart = [];
+        let currentSlide = 0;
+        const totalSlides = 3;
+        let carouselInterval = null;
+
+        // Carousel Logic
+        function updateCarouselUI() {
+            const slides = document.querySelectorAll('.carousel-hero-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+
+            slides.forEach((slide, idx) => {
+                if (idx === currentSlide) {
+                    slide.classList.remove('inactive');
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                    slide.classList.add('inactive');
+                }
+            });
+
+            dots.forEach((dot, idx) => {
+                if (idx === currentSlide) {
+                    dot.className = "carousel-dot w-6 h-1.5 rounded-full bg-sage transition-all";
+                } else {
+                    dot.className = "carousel-dot w-2 h-1.5 rounded-full bg-softwhite/40 hover:bg-softwhite transition-all";
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarouselUI();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarouselUI();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarouselUI();
+        }
+
+        function startCarousel() {
+            stopCarousel();
+            carouselInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopCarousel() {
+            if (carouselInterval) {
+                clearInterval(carouselInterval);
+                carouselInterval = null;
+            }
+        }
+
+        function pauseCarousel() {
+            stopCarousel();
+        }
+
+        function resumeCarousel() {
+            startCarousel();
+        }
+
+        // Menu Rendering & Filtering
+        function renderProducts(category = 'all') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+
+            const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-surface rounded-3xl overflow-hidden border border-sage/45 shadow-sm hover:shadow-md transition flex flex-col justify-between group";
+                card.innerHTML = `
+                    <div>
+                        <div class="h-52 overflow-hidden relative bg-softwhite">
+                            <img src="${p.image}" 
+                                 onerror="this.src='https://placehold.co/600x450/2E3D28/E8E9DF?text=${encodeURIComponent(p.name)}'"
+                                 alt="${p.name}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <span class="absolute top-3 left-3 bg-sage/95 text-olive text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">${p.portion}</span>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-editorial text-xl font-bold text-olive mb-1.5 line-clamp-1">${p.name}</h3>
+                            <p class="text-xs text-olive-muted leading-relaxed line-clamp-2">${p.desc}</p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5 pt-3 flex items-center justify-between border-t border-sage/30 mt-2">
+                        <span class="font-serif font-bold text-xl text-olive">Rs. ${p.price.toLocaleString()}</span>
+                        <button onclick="addToCart(${p.id})" class="bg-olive hover:bg-olive-hover text-softwhite px-4 py-2 rounded-full text-xs font-semibold transition">
+                            + Add to Order
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function filterCategory(category) {
+            document.querySelectorAll('.category-tab').forEach(btn => {
+                btn.className = "category-tab bg-surface border border-sage/50 text-olive hover:bg-sage/35 px-5 py-2.5 rounded-full text-xs font-semibold transition";
+            });
+            const activeTab = document.getElementById(`tab-${category}`);
+            if (activeTab) {
+                activeTab.className = "category-tab active bg-olive text-softwhite px-5 py-2.5 rounded-full text-xs font-semibold transition shadow-sm";
+            }
+            renderProducts(category);
+        }
+
+        // Toast Feedback
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2600);
+        }
+
+        // Cart Management
+        function addToCart(productId) {
+            const item = products.find(p => p.id === productId);
+            if (item) {
+                const existing = cart.find(c => c.id === productId && !c.isCustom);
+                if (existing) {
+                    existing.qty += 1;
+                } else {
+                    cart.push({ ...item, qty: 1, isCustom: false });
+                }
+                updateCartUI();
+                showToast(`${item.name} added to bag`);
+            }
+        }
+
+        function updateCartUI() {
+            const countEl = document.getElementById('cart-count');
+            const totalEl = document.getElementById('cart-total');
+            const container = document.getElementById('cart-items-container');
+
+            const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
+            const totalPrice = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+            countEl.innerText = totalItems;
+            totalEl.innerText = `Rs. ${totalPrice.toLocaleString()}`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-olive-muted text-xs">Your order bag is currently empty.</div>`;
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="flex items-center justify-between py-3.5">
+                    <div class="flex-1 pr-3">
+                        <h5 class="font-bold text-xs text-olive">${item.name}</h5>
+                        ${item.isCustom ? `<p class="text-[11px] text-olive-muted mt-0.5">${item.weight} • "${item.message}" • ${item.sector}</p>` : `<p class="text-[10px] text-olive-muted">${item.portion || ''}</p>`}
+                        <span class="text-xs font-serif text-olive font-bold mt-1 inline-block">Rs. ${(item.price * item.qty).toLocaleString()}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="changeQty(${index}, -1)" class="w-7 h-7 rounded-full bg-surface border border-sage text-olive text-xs font-bold flex items-center justify-center hover:bg-sage/40">-</button>
+                        <span class="text-xs font-bold w-5 text-center text-olive">${item.qty}</span>
+                        <button onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-full bg-surface border border-sage text-olive text-xs font-bold flex items-center justify-center hover:bg-sage/40">+</button>
+                        <button onclick="removeItem(${index})" aria-label="Remove Item" class="ml-1 text-olive-muted hover:text-olive p-1">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCartDrawer(open) {
+            const drawer = document.getElementById('cart-drawer');
+            if (open === true) {
+                drawer.classList.remove('hidden');
+            } else if (open === false) {
+                drawer.classList.add('hidden');
+            } else {
+                drawer.classList.toggle('hidden');
+            }
+        }
+
+        // Custom Cake Modal Logic
+        function openCustomCakeModal() {
+            document.getElementById('custom-cake-modal').classList.remove('hidden');
+            updateCustomPrice();
+        }
+
+        function closeCustomCakeModal() {
+            document.getElementById('custom-cake-modal').classList.add('hidden');
+        }
+
+        function updateCustomPrice() {
+            const options = document.querySelectorAll('.weight-option');
+            let selectedPrice = 1000;
+            options.forEach(opt => {
+                const radio = opt.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    opt.className = "weight-option border-2 border-olive bg-sage/35 rounded-xl p-2.5 text-center cursor-pointer transition";
+                    selectedPrice = parseInt(radio.getAttribute('data-price'), 10);
+                } else {
+                    opt.className = "weight-option border border-sage bg-surface rounded-xl p-2.5 text-center cursor-pointer transition";
+                }
+            });
+            document.getElementById('custom-cake-live-price').innerText = `Rs. ${selectedPrice.toLocaleString()}`;
+        }
+
+        function handleCustomCakeSubmit(e) {
+            e.preventDefault();
+            const flavor = document.getElementById('cake-flavor').value;
+            const weightRadio = document.querySelector('input[name="cake-weight"]:checked');
+            const weight = weightRadio.value;
+            const price = parseInt(weightRadio.getAttribute('data-price'), 10);
+            const message = document.getElementById('cake-message').value.trim() || "Happy Celebration";
+            const sector = document.getElementById('delivery-sector').value;
+
+            const customCake = {
+                id: Date.now(),
+                name: `Custom ${flavor}`,
+                category: "cakes",
+                price: price,
+                weight: weight,
+                message: message,
+                sector: sector,
+                qty: 1,
+                isCustom: true
+            };
+
+            cart.push(customCake);
+            updateCartUI();
+            closeCustomCakeModal();
+            toggleCartDrawer(true);
+            showToast("Custom cake added to your bag!");
+        }
+
+        // Checkout & WhatsApp Integration
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showToast("Please add items to your bag first.");
+                return;
+            }
+            const summaryBox = document.getElementById('checkout-summary-box');
+            const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+            summaryBox.innerHTML = cart.map(item => `
+                <div class="flex justify-between items-start border-b border-sage/30 pb-2">
+                    <div>
+                        <span class="font-bold">${item.name} × ${item.qty}</span>
+                        ${item.isCustom ? `<div class="text-[10px] text-olive-muted">${item.weight} | "${item.message}" | ${item.sector}</div>` : ''}
+                    </div>
+                    <span class="font-bold">Rs. ${(item.price * item.qty).toLocaleString()}</span>
+                </div>
+            `).join('') + `
+                <div class="flex justify-between items-center pt-2 font-bold text-sm text-olive">
+                    <span>Total Payable:</span>
+                    <span>Rs. ${total.toLocaleString()}</span>
+                </div>
+            `;
+
+            toggleCartDrawer(false);
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        function clearAndCloseOrder() {
+            cart = [];
+            updateCartUI();
+            closeCheckoutModal();
+            showToast("Order bag cleared. Thank you!");
+        }
+
+        function sendWhatsAppOrder() {
+            if (cart.length === 0) {
+                showToast("Your bag is empty.");
+                return;
+            }
+            let message = "Assalam-o-Alaikum Taj Bakery (Surjani Town), I would like to place an order:\n\n";
+            cart.forEach(item => {
+                message += `• ${item.name} x${item.qty} — Rs. ${(item.price * item.qty).toLocaleString()}\n`;
+                if (item.isCustom) {
+                    message += `  [Size: ${item.weight} | Message: "${item.message}" | Area: ${item.sector}]\n`;
+                }
+            });
+            const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            message += `\nTotal Amount: Rs. ${total.toLocaleString()}\nBranch: Main Commercial Road, Sector 7-A, Surjani Town, Karachi`;
+
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/923001234567?text=${encoded}`, '_blank', 'noopener,noreferrer');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Initialize on Window Load
+        window.onload = function() {
+            renderProducts('all');
+            startCarousel();
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
